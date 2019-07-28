@@ -1,5 +1,5 @@
-import { AbstractControl } from "@angular/forms";
-import { Observable, Observer, of } from "rxjs";
+import { AbstractControl } from '@angular/forms';
+import { Observable, Observer, of } from 'rxjs';
 
 export const mimeType = (
   control: AbstractControl
@@ -36,11 +36,11 @@ export const mimeType = (
       if (isValid) {
         observer.next(null);
       } else {
-        observer.next({invalidMimeType: true})
+        observer.next({invalidMimeType: true});
       }
       observer.complete();
     });
     fileReader.readAsArrayBuffer(file);
   });
   return frObs;
-}
+};
