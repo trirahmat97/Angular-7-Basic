@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import {Post} from './post.model';
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
 import {HttpClient} from '@angular/common/http';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
- constructor(private http: HttpClient, private router: Router) {}
 
- private posts: Post[] = [];
- private postsUpdate = new Subject<{posts: Post[], postCount: number}>();
+  private posts: Post[] = [];
+  private postsUpdate = new Subject<{posts: Post[], postCount: number}>();
+
+
+  constructor(private http: HttpClient, private router: Router) {}
 
  getPosts(postsPerPage: number, currentPage: number) {
    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
