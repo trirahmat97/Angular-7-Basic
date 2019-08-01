@@ -44,7 +44,11 @@ router.post('', checkAuth, multer({storage: storage}).single("image"), (req, res
         id: createdPost._id
       }
     })
-  });
+  }).catch(error => {
+    res.status(500).json({
+      message: 'Creating a post failed!'
+    })
+  })
 });
 
 router.put('/:id', checkAuth, multer({storage: storage}).single("image"), (req, res, next) => {
@@ -61,18 +65,24 @@ router.put('/:id', checkAuth, multer({storage: storage}).single("image"), (req, 
     imagePath: imagePath,
     creator: req.userData.userId
   });
-  console.log(post);
-  Post.updateOne({_id: req.params.id, creator: req.userData.userId}, post).then(result =>{
+  // console.log(post);
+  Post.updateOne({_id: req.params.id, creator: req.userData.userId}, post)
+  .then(result =>{
     if(result.nModified > 0) {
       res.status(200).json({message: 'Update Success!'});
     }else{
       res.status(401).json({message: 'Not Unathorize!'});
     }
-  });
+  }).catch(error => {
+    res.status(500).json({
+      message: 'Could not update post!'
+    })
+  })
 });
 
 router.get('/:id', (req, res, next) => {
-  Post.findById(req.params.id).then(post => {
+  Post.findById(req.params.id)
+  .then(post => {
     if(post){
       return res.status(200).json(post);
     }else{
@@ -81,21 +91,30 @@ router.get('/:id', (req, res, next) => {
       });
     }
   })
+  .catch(error => {
+    res.status(500).json({
+      message: 'Fetching posts failed!'
+    })
+  })
 });
 
-router.delete("/:id", checkAuth,(req, res, next)=>{
-    Post.deleteOne({_id: req.params.id, creator: req.userData.userId})
-    .then(result => {
-      if(result.n > 0) {
-        res.status(200).json({message: 'Update Success!'});
-      }else{
-        res.status(401).json({message: 'Not Unathorize!'});
-      }
+router.delete("/:id", checkAuth,(req, res, next) => {
+  Post.deleteOne({_id: req.params.id, creator: req.userData.userId})
+  .then(result => {
+    if(result.n > 0) {
+      res.status(200).json({message: 'Update Success!'});
+    }else{
+      res.status(401).json({message: 'Not Unathorize!'});
+    }
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: 'Deleting failed!'
     });
+  });
 });
 
 router.get('', (req, res, next)=>{
-  // pagination
   const pageSize = +req.query.pagesize;
   const currentPage = +req.query.page;
   const postQuery = Post.find();
@@ -115,8 +134,13 @@ router.get('', (req, res, next)=>{
       message: "Posts fetched succesfully!",
       posts: fetchedPosts,
       maxPosts: count
-    });
-  });
-});
+    })
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: 'Fetching posts failed!'
+    })
+  })
+})
 
 module.exports = router;
