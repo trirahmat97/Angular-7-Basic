@@ -8,9 +8,12 @@ const postsRouters = require('./routers/posts');
 const usersRouters = require('./routers/users');
 
 const app = express();
+//mongodb+srv://tra:<password>@cluster0-21olw.mongodb.net/test?retryWrites=true&w=major
+//"mongodb+srv://tra:"+process.env.MONGO_ATLAS_PW+"@cluster0-21olw.mongodb.net/node-angular?retryWrites=true&w=majority"
+// const urlDB = "mongodb://127.0.0.1:27017/node-angular?retryWrites=true";
 
-//"mongodb+srv://tra:tra260397bew@cluster0-21olw.mongodb.net/node-angular?retryWrites=true&w=majority"
-const urlDB = "mongodb://127.0.0.1:27017/node-angular?retryWrites=true";
+const urlDB = "mongodb+srv://tra:"+process.env.MONGO_ATLAS_PW+"@cluster0-21olw.mongodb.net/node-angular?retryWrites=true"
+
 mongoose.connect(urlDB, {
     useNewUrlParser: true,
     useCreateIndex: true
